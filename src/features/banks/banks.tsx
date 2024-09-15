@@ -1,6 +1,5 @@
-import { useCallback, useState, useMemo } from "react";
-import { BankView } from "./banks-api";
-import { Button, Spinner, Pagination, useDisclosure } from "@nextui-org/react";
+import { useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 
 import {
   Table,
@@ -9,13 +8,15 @@ import {
   TableBody,
   TableRow,
   TableCell,
+  Button,
+  Spinner,
+  Pagination,
+  useDisclosure,
 } from "@nextui-org/react";
 
 import { CreateBank } from "./create-bank";
+import { BankView } from "./banks-api";
 import { useBanks } from "./use-banks";
-
-import BankDetail from "./bank-detail";
-import { useNavigate } from "react-router-dom";
 
 const columns = [
   {
@@ -46,18 +47,8 @@ const columns = [
 ];
 
 const Banks = () => {
-  const {
-    banks,
-    isBanksLoading,
-    setSelectedBank,
-    selectedBank,
-    setPage,
-    page,
-  } = useBanks();
+  const { banks, isBanksLoading, setPage, page } = useBanks();
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
-  const { isOpen: isOpen2, onOpenChange: onOpenChange2 } = useDisclosure();
-
-  console.log(page);
 
   const navigate = useNavigate();
 
@@ -112,7 +103,7 @@ const Banks = () => {
                 color="secondary"
                 page={page}
                 total={40}
-                // Since I am using server side pagination the server is 
+                // Since I am using server side pagination the server is
                 // supposed to send count but it doesnt thus I am going to hard code total
                 onChange={(page) => setPage(page)}
                 variant="light"
@@ -147,11 +138,6 @@ const Banks = () => {
         isOpen={isOpen}
         onOpenChange={onOpenChange}
         onClose={onClose}
-      />
-      <BankDetail
-        isOpen={isOpen2}
-        onOpenChange={onOpenChange2}
-        bank={selectedBank}
       />
     </div>
   );

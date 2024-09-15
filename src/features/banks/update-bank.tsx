@@ -5,7 +5,7 @@ import { useBanks } from "./use-banks";
 type UpdateBankProps = {
   isOpen: boolean;
   onOpenChange: () => void;
-  data: BankView | null
+  data: BankView | undefined
 
 };
 export const UpdateBank = (props: UpdateBankProps) => {

@@ -3,9 +3,12 @@ import { supabase } from "../../lib/superbase";
 
 export const banksApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getBanks: builder.query<BankView[], any>({
-      queryFn: async ({start, end}) => {
-        const { data, error } = await supabase.from("banks").select("*").range(start, end);
+    getBanks: builder.query<BankView[], BanksArgs>({
+      queryFn: async ({ start, end }) => {
+        const { data, error } = await supabase
+          .from("banks")
+          .select("*")
+          .range(start, end);
 
         if (error) {
           return { error };
@@ -16,7 +19,7 @@ export const banksApi = baseApi.injectEndpoints({
       providesTags: ["BANKS"],
     }),
 
-    getBank: builder.query<any, any>({
+    getBank: builder.query<BankView, BankArg>({
       queryFn: async ({ id }) => {
         const { data, error } = await supabase
           .from("banks")
@@ -33,7 +36,7 @@ export const banksApi = baseApi.injectEndpoints({
       providesTags: ["BANKS"],
     }),
 
-    createBank: builder.mutation<any, any>({
+    createBank: builder.mutation<unknown, BankCreate>({
       async queryFn(body) {
         const { data, error } = await supabase
           .from("banks")
@@ -49,7 +52,7 @@ export const banksApi = baseApi.injectEndpoints({
       invalidatesTags: ["BANKS"],
     }),
 
-    updateBank: builder.mutation<any, any>({
+    updateBank: builder.mutation<unknown, BankUpdate>({
       async queryFn({ id, ...body }) {
         const { data, error } = await supabase
           .from("banks")
@@ -104,4 +107,17 @@ export interface BankCreate {
   fax: string;
   website: string;
   status: boolean;
+}
+
+export interface BankArg {
+  id: number | string | undefined;
+}
+
+export interface BanksArgs {
+  start: number;
+  end: number;
+}
+
+export interface BankUpdate extends BankCreate {
+  id: number;
 }
