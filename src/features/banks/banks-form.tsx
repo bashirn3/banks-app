@@ -10,7 +10,7 @@ import {
   Switch,
 } from "@nextui-org/react";
 
-import {parseDate} from "@internationalized/date";
+import { parseDate, DateValue } from "@internationalized/date";
 
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -41,7 +41,11 @@ const validationSchema = yup.object({
     .required(),
   address: yup.string().label("Address").required(),
   email: yup.string().email().label("Email").required(),
-  code: yup.number().typeError("Only Numbers Allowed").label("Swift").required(),
+  code: yup
+    .number()
+    .typeError("Only Numbers Allowed")
+    .label("Swift")
+    .required(),
   fax: yup.number().typeError("Only Numbers Allowed").label("Fax"),
   valid_from: yup.string().label("Valid From Date"),
   valid_to: yup.string().label("Valid To Date"),
@@ -113,11 +117,7 @@ export const BanksForm = (props: BanksFormProps) => {
     valid_from,
     valid_to,
     website,
-    status,
   } = watch();
-
-
-
 
   return (
     <>
@@ -145,7 +145,6 @@ export const BanksForm = (props: BanksFormProps) => {
                     labelPlacement="outside"
                     placeholder="Enter your bank"
                     radius="sm"
-                    
                   />
 
                   <Input
@@ -171,7 +170,7 @@ export const BanksForm = (props: BanksFormProps) => {
                       onChange={(value) =>
                         setValue("valid_from", value as any as string)
                       }
-                      value={valid_from ? parseDate(valid_from) : null}
+                      // value={valid_from ? parseDate(valid_from) : null}
                       isInvalid={errors.valid_from && true}
                       errorMessage={errors.valid_from?.message}
                       radius="sm"
@@ -185,7 +184,7 @@ export const BanksForm = (props: BanksFormProps) => {
                       onChange={(value) =>
                         setValue("valid_to", value as any as string)
                       }
-                      value={valid_to ? parseDate(valid_to) : null}
+                      // value={valid_to ? parseDate(valid_to) : null}
                       errorMessage={errors.valid_to?.message}
                       isInvalid={errors.valid_to && true}
                       radius="sm"
@@ -277,7 +276,6 @@ export const BanksForm = (props: BanksFormProps) => {
                     classNames={{
                       wrapper: "t-xs",
                     }}
-
                     size="md"
                     color="success"
                     startContent={<p className="t-[8px] text-white">ON</p>}

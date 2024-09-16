@@ -3,18 +3,18 @@ import { supabase } from "../../lib/superbase";
 
 export const banksApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getBanks: builder.query<BankView[], BanksArgs>({
-      queryFn: async ({ start, end }) => {
-        const { data, error } = await supabase
+    getBanks: builder.query<BanksResponse, BanksArgs>({
+      queryFn: async ({ start, end,  }) => {
+        const { data, error, count  } = await supabase
           .from("banks")
-          .select("*")
+          .select("*", { count: 'exact' })
           .range(start, end);
 
         if (error) {
           return { error };
         }
 
-        return { data };
+        return { data: { data: data || [], count: count || 0 } };
       },
       providesTags: ["BANKS"],
     }),
@@ -93,6 +93,11 @@ export interface BankView {
   fax: string;
   website: string;
   status: boolean;
+}
+
+export interface BanksResponse {
+  data: BankView[];
+  count: number;
 }
 
 export interface BankCreate {

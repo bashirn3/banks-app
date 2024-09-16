@@ -8,15 +8,31 @@ import {
 } from "./banks-api";
 
 export const useBanks = () => {
-  const [page, setPage] = useState(0);
 
-  const rowsPerPage = 5;
-  const start = page * rowsPerPage;
-  const end = rowsPerPage - 1;
-  const { data: banks, isLoading: isBanksLoading } = useGetBanksQuery({
+  const [page, setPage] = useState(1); // Start from page 1
+  const [rowsPerPage, setRowsPerPage] = useState(5); // Default to 10 rows per page
+
+  const start = (page - 1) * rowsPerPage;
+  const end = start + rowsPerPage - 1;
+ 
+  const { data, isLoading: isBanksLoading } = useGetBanksQuery({
     start,
-    end,
+    end
   });
+
+  const banks = data?.data || [];
+  const totalCount = data?.count || 0;
+  const pages = totalCount/rowsPerPage;
+
+
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleRowsPerPageChange = (newRowsPerPage: number) => {
+    setRowsPerPage(newRowsPerPage);
+    setPage(1); 
+  };
 
 
   const [selectedBank, setSelectedBank] = useState<BankView | null>(null);
@@ -36,7 +52,10 @@ export const useBanks = () => {
     isBankUpdated,
     selectedBank,
     setSelectedBank,
+    pages,
     page,
-    setPage,
+    rowsPerPage,
+    handlePageChange,
+    handleRowsPerPageChange,
   };
 };
