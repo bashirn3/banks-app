@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -12,6 +12,7 @@ import {
   Spinner,
   Pagination,
   useDisclosure,
+  SortDescriptor
 } from "@nextui-org/react";
 
 import { CreateBank } from "./create-bank";
@@ -27,18 +28,22 @@ const columns = [
   {
     key: "name",
     label: "Bank Name",
+    sortable: true,
   },
   {
     key: "status",
     label: "Status",
+    sortable: true,
   },
   {
     key: "valid_from",
     label: "Start date of valid",
+    sortable: true,
   },
   {
     key: "valid_to",
     label: "End date of valid",
+    sortable: true,
   },
   {
     key: "view",
@@ -46,9 +51,31 @@ const columns = [
   },
 ];
 
+
 const Banks = () => {
-  const { banks, isBanksLoading, setPage, page } = useBanks();
+  const { banks, isBanksLoading, handlePageChange, page, pages } = useBanks();
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
+
+  console.log(banks)
+
+  const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
+    column: "code",
+    direction: "ascending",
+  });
+
+  const sortedBanks = useMemo(() => {
+    if (!banks) return [];
+    return [...banks].sort((a, b) => {
+      const first = a[sortDescriptor.column as keyof BankView];
+      const second = b[sortDescriptor.column as keyof BankView];
+      const cmp = (first < second) ? -1 : (first > second) ? 1 : 0;
+      return sortDescriptor.direction === "descending" ? -cmp : cmp;
+    });
+  }, [banks, sortDescriptor]);
+
+  const onSortChange = (descriptor:SortDescriptor) => {
+    setSortDescriptor(descriptor);
+  };
 
   const navigate = useNavigate();
 
@@ -96,30 +123,30 @@ const Banks = () => {
           aria-label="Example table with dynamic content"
           bottomContent={
             <div className="flex w-full justify-center">
-              <Pagination
+               <Pagination
                 isCompact
                 showControls
                 showShadow
                 color="secondary"
                 page={page}
-                total={40}
-                // Since I am using server side pagination the server is
-                // supposed to send count but it doesnt thus I am going to hard code total
-                onChange={(page) => setPage(page)}
+                total={pages}
+                onChange={handlePageChange}
                 variant="light"
               />
             </div>
           }
+          sortDescriptor={sortDescriptor}
+          onSortChange={onSortChange}
         >
           <TableHeader columns={columns}>
             {(column) => (
-              <TableColumn key={column.key} allowsSorting>
+              <TableColumn key={column.key} allowsSorting={column.sortable}>
                 {column.label}
               </TableColumn>
             )}
           </TableHeader>
           <TableBody
-            items={banks ?? []}
+            items={sortedBanks ?? []}
             emptyContent={"No Banks to display"}
             isLoading={isBanksLoading}
             loadingContent={<Spinner label="Loading..." />}

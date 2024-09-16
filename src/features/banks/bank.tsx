@@ -54,7 +54,7 @@ const Bank = () => {
       <section className="py-2">
         <p className="text-xl font-bold my-3">Status</p>
         <span> Active Status</span>{" "}
-        <span className={`text-${bank?.status ? "green-500" : "red-500"}`}>
+        <span className={`text-${bank?.status ? "green-500" : !bank?.status ? "red-500" : "green-500"}`}>
           {" "}
           {bank?.status === true ? "ON" : "OFF"}
         </span>
