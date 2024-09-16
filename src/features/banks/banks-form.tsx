@@ -10,7 +10,7 @@ import {
   Switch,
 } from "@nextui-org/react";
 
-import { parseDate, DateValue } from "@internationalized/date";
+// import { parseDate, DateValue } from "@internationalized/date";
 
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -114,8 +114,6 @@ export const BanksForm = (props: BanksFormProps) => {
     email,
     code,
     fax,
-    valid_from,
-    valid_to,
     website,
   } = watch();
 
