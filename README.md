@@ -15,4 +15,4 @@ This project is a bank app for testing purposes.
 
 Contributor: bashirrn3@gmail.com
 
-Deployment url: https://banks-ltccdvu62-bashirn3s-projects.vercel.app/
+Deployment url: https://banks-app-sable.vercel.app/
