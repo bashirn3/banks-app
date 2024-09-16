@@ -3,7 +3,6 @@ import { useNavigate, useParams } from "react-router";
 import { useGetBankQuery } from "./banks-api";
 import { UpdateBank } from "./update-bank";
 
-useNavigate;
 
 const Bank = () => {
   const { id } = useParams();
@@ -32,7 +31,11 @@ const Bank = () => {
   return (
     <>
       <div className="max-w-screen-lg mx-auto">
-        <Button variant="light" onClick={() => navigate(-1)} className="text-white">
+        <Button
+          variant="light"
+          onClick={() => navigate(-1)}
+          className="text-white"
+        >
           Back
         </Button>
       </div>
@@ -65,12 +68,7 @@ const Bank = () => {
             renderSkeleton("w-24")
           ) : (
             <div>
-              <span>Active Status </span>
-              <span
-                className={`text-${bank?.status ? "green-500" : "red-500"}`}
-              >
-                {bank?.status ? "ON" : "OFF"}
-              </span>
+               <StatusDisplay status={bank?.status} />
             </div>
           )}
         </section>
@@ -102,5 +100,19 @@ export const BankInfo = ({ title, value }: BankInfoProps) => (
   <div className="flex flex-col">
     <p className="text-[#8D8D8D] font-thin">{title}</p>
     <p>{value}</p>
+  </div>
+);
+
+
+type StatusDisplayProps = {
+  status: boolean | undefined
+}
+
+const StatusDisplay = ({ status }: StatusDisplayProps) => (
+  <div>
+    <span>Active Status </span>
+    <span className={status ? 'text-green-500' : 'text-red-500'}>
+      {status ? 'ON' : 'OFF'}
+    </span>
   </div>
 );

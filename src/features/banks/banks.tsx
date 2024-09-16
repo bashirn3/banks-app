@@ -1,4 +1,4 @@
-import { useCallback, useState, useMemo } from "react";
+import { useCallback} from "react";
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -12,7 +12,7 @@ import {
   Spinner,
   Pagination,
   useDisclosure,
-  SortDescriptor
+  Input,
 } from "@nextui-org/react";
 
 import { CreateBank } from "./create-bank";
@@ -51,31 +51,24 @@ const columns = [
   },
 ];
 
-
 const Banks = () => {
-  const { banks, isBanksLoading, handlePageChange, page, pages, isBanksFetching } = useBanks();
+  const {
+    isBanksLoading,
+    handlePageChange,
+    page,
+    pages,
+    isBanksFetching,
+    onSearchChange,
+    onSortChange,
+    filteredAndSortedBanks,
+    filterValue,
+    onClear,
+    sortDescriptor,
+    
+  } = useBanks();
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
 
-  console.log(banks)
-
-  const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
-    column: "code",
-    direction: "ascending",
-  });
-
-  const sortedBanks = useMemo(() => {
-    if (!banks) return [];
-    return [...banks].sort((a, b) => {
-      const first = a[sortDescriptor.column as keyof BankView];
-      const second = b[sortDescriptor.column as keyof BankView];
-      const cmp = (first < second) ? -1 : (first > second) ? 1 : 0;
-      return sortDescriptor.direction === "descending" ? -cmp : cmp;
-    });
-  }, [banks, sortDescriptor]);
-
-  const onSortChange = (descriptor:SortDescriptor) => {
-    setSortDescriptor(descriptor);
-  };
+ 
 
   const navigate = useNavigate();
 
@@ -121,13 +114,27 @@ const Banks = () => {
       <div className="my-2">
         <Table
           aria-label="Example table with dynamic content"
+          topContent={
+            <div className="flex items-center gap-3">
+              <span className="text-[#488E53] text-2xl">Filter</span>
+              <Input
+                isClearable
+                className="w-full sm:max-w-[44%]"
+                placeholder="Search by name"
+                value={filterValue}
+                onClear={() => onClear()}
+                onValueChange={onSearchChange}
+              />
+            </div>
+          }
           bottomContent={
             <div className="flex w-full justify-center">
-               <Pagination
+              <Pagination
                 isCompact
                 showControls
                 showShadow
                 color="secondary"
+                initialPage={1}
                 page={page}
                 total={pages}
                 onChange={handlePageChange}
@@ -146,7 +153,7 @@ const Banks = () => {
             )}
           </TableHeader>
           <TableBody
-            items={sortedBanks ?? []}
+            items={filteredAndSortedBanks ?? []}
             emptyContent={"No Banks to display"}
             isLoading={isBanksLoading || isBanksFetching}
             loadingContent={<Spinner label="Loading..." />}
