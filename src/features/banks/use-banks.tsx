@@ -26,7 +26,7 @@ export const useBanks = () => {
 
   const banks = data?.data || [];
   const totalCount = data?.count || 0;
-  const pages = totalCount / rowsPerPage;
+  const pages = Math.ceil(totalCount / rowsPerPage);
 
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
@@ -79,7 +79,6 @@ export const useBanks = () => {
     setFilterValue("");
   }, []);
 
-  const [selectedBank, setSelectedBank] = useState<BankView | null>(null);
   const [createBank, { isLoading: isBankCreating, isSuccess: isBankCreated }] =
     useCreateBankMutation();
   const [updateBank, { isLoading: isBankUpdating, isSuccess: isBankUpdated }] =
@@ -94,8 +93,6 @@ export const useBanks = () => {
     updateBank,
     isBankUpdating,
     isBankUpdated,
-    selectedBank,
-    setSelectedBank,
     pages,
     page,
     rowsPerPage,
