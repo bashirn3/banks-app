@@ -98,8 +98,8 @@ export const BanksForm = (props: BanksFormProps) => {
       setValue("phone", data.phone);
       setValue("address", data.address);
       setValue("email", data.email),
-        setValue("code", data.code as any),
-        setValue("fax", data.fax as any),
+        setValue("code", data.code as any as number),
+        setValue("fax", data.fax as any as number),
         setValue("valid_from", data.valid_from),
         setValue("valid_to", data.valid_to),
         setValue("website", data.website),
@@ -107,15 +107,7 @@ export const BanksForm = (props: BanksFormProps) => {
     }
   }, [isEditMode, data]);
 
-  const {
-    name,
-    phone,
-    address,
-    email,
-    code,
-    fax,
-    website,
-  } = watch();
+  const { name, phone, address, email, code, fax, website } = watch();
 
   return (
     <>
@@ -137,6 +129,8 @@ export const BanksForm = (props: BanksFormProps) => {
               </ModalHeader>
               <ModalBody>
                 <div className="grid grid-cols-2 my-3 gap-3">
+                  {/* This is part of the design however there is no bank column on the server as 
+                  such I have left it as a dummy input */}
                   <Input
                     type="text"
                     label="Bank"
@@ -272,12 +266,13 @@ export const BanksForm = (props: BanksFormProps) => {
                   <p className="text-xs">Active Status</p>
                   <Switch
                     classNames={{
-                      wrapper: "t-xs",
+                      startContent: "text-[8px] font-semibold",
+                      endContent: "text-[8px] font-semibold",
                     }}
                     size="md"
                     color="success"
-                    startContent={<p className="t-[8px] text-white">ON</p>}
-                    endContent={<p className="t-[8px]">OFF</p>}
+                    startContent={<span className="text-white">ON</span>}
+                    endContent={<span>OFF</span>}
                     {...register("status")}
                   />
                 </div>
