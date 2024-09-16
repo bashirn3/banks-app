@@ -53,7 +53,7 @@ const columns = [
 
 
 const Banks = () => {
-  const { banks, isBanksLoading, handlePageChange, page, pages } = useBanks();
+  const { banks, isBanksLoading, handlePageChange, page, pages, isBanksFetching } = useBanks();
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
 
   console.log(banks)
@@ -148,7 +148,7 @@ const Banks = () => {
           <TableBody
             items={sortedBanks ?? []}
             emptyContent={"No Banks to display"}
-            isLoading={isBanksLoading}
+            isLoading={isBanksLoading || isBanksFetching}
             loadingContent={<Spinner label="Loading..." />}
           >
             {(item) => (

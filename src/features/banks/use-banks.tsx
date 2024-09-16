@@ -9,13 +9,13 @@ import {
 
 export const useBanks = () => {
 
-  const [page, setPage] = useState(1); // Start from page 1
-  const [rowsPerPage, setRowsPerPage] = useState(5); // Default to 10 rows per page
+  const [page, setPage] = useState(1); 
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const start = (page - 1) * rowsPerPage;
   const end = start + rowsPerPage - 1;
  
-  const { data, isLoading: isBanksLoading } = useGetBanksQuery({
+  const { data, isLoading: isBanksLoading, isFetching: isBanksFetching } = useGetBanksQuery({
     start,
     end
   });
@@ -57,5 +57,6 @@ export const useBanks = () => {
     rowsPerPage,
     handlePageChange,
     handleRowsPerPageChange,
+    isBanksFetching,
   };
 };
